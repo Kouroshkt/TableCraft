@@ -1,0 +1,112 @@
+.tableSection {
+  border-radius: 10px;
+  background-color: antiquewhite;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.242);
+}
+
+.createDatabase {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.createTable {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.columnsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: rgba(0, 255, 255, 0.265);
+  border-radius: 15px;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.columns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.underCloumns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.checkboxs {
+  display: flex;
+  gap: 10px;
+}
+
+.columnsRigth {
+  display: flex;
+  gap: 10px;
+}
+
+.createRigth {
+  display: flex;
+  gap: 10px;
+}
+
+select[multiple] option:checked {
+  background-color: #2196f3;
+  color: white;
+}
+
+.tableView {
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  background-color: rgba(181, 252, 4, 0.468);
+  box-shadow: 0 2px 5px rgba(0,
+      0, 0, 0.1);
+}
+
+.tableView th,
+.tableView td {
+  border: 1px solid #c2c1c1bb;
+  padding: 10px;
+  text-align: left;
+}
+
+.tableView th {
+  background-color: #f0f4f8;
+  font-weight: bold;
+  color: #333;
+}
+
+.tableView tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tableView tr:hover {
+  background-color: #f1f1f1;
+}
+
+.tableContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.databasStyle {
+  display: flex;
+  flex-direction: column;
+}
+ .alltables{
+  border-radius: 10px;
+  background-color: antiquewhite;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.242);
+ }
+
+ 
