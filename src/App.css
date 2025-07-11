@@ -1,0 +1,39 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+button {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid rgb(98, 178, 249);
+  width: 130px;
+  height: 30px;
+}
+
+input {
+  padding: 6px;
+  border-radius: 5px;
+  width: 149px;
+  border: 1px solid rgb(98, 178, 249);
+}
+
+input[type="checkbox"] {
+width: 18px;
+height: 18px;
+vertical-align: middle;
+}
+
+
+select {
+  padding: 6px;
+  width: 160px;
+  border-radius: 5px;
+  border: 1px solidrgb(98, 178, 249);
+}
+
+button:hover {
+  background-color: rgb(131, 13, 241);
+  color: white;
+  border-color: rgb(131, 13, 241);
+}

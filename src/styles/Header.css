@@ -1,0 +1,23 @@
+.headerSection {
+  background-color: antiquewhite;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  max-width: 200px;
+  gap: 5px;
+}
+
+body {
+  padding-top: 30px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
