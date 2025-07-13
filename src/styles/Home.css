@@ -101,12 +101,46 @@ select[multiple] option:checked {
   display: flex;
   flex-direction: column;
 }
- .alltables{
+
+.alltables {
   border-radius: 10px;
   background-color: antiquewhite;
   margin-top: 10px;
   padding: 10px;
   border: 1px solid rgba(0, 0, 0, 0.242);
- }
+}
 
- 
+.table-display {
+  border-collapse: collapse;
+  margin: 20px auto;
+  width: 300px;
+  background-color: #fefefe;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-display th,
+.table-display td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.table-display th {
+  background-color: antiquewhite;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.display {
+  display: flex;
+  flex-direction: row;
+}
+
+.sqlSection {
+  width: 70%;
+  border-radius: 10px;
+  font-size: 20px;
+  border: 1px solid black;
+  padding: 10px;
+}

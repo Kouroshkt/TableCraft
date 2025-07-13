@@ -94,7 +94,85 @@ export function Home() {
         setTables(prev => [...prev, table]);
         setTable({ name: "", columns: [] });
     }
-    console.log(tables)
+    const Display = () => {
+        return (
+            <div className="display">
+                {tables.map((table, index) => (
+                    <table key={index} className="table-display">
+                        <thead>
+                            <tr>
+                                <th colSpan="2">{table.name}</th>
+                            </tr>
+                            <tr>
+                                <th>Column name</th>
+                                <th>Info</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {table.columns.map((col, colIndex) => (
+                                <tr key={colIndex}>
+                                    <td>{col.name}</td>
+                                    <td>
+                                        {col.foreignKey && `Foreign key → ${col.relatedTable}`}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+
+                    </table>
+                ))}
+            </div>
+        );
+    };
+
+    const [showSqlSection, setShowSqlSection] = useState(false);
+    const [sqlCode, setSqlCode] = useState("");
+
+    const handelSqlCode = () => {
+        if (!tables || tables.length === 0) {
+            alert("You have no tables.");
+            return;
+        }
+
+        const code = tables.map(table => {
+            const columnsSql = table.columns.map(col => {
+                let line = `  ${col.name} ${col.type || "TEXT"}`;
+
+                if (col.primaryKey) line += " PRIMARY KEY";
+                if (col.autoIncrement) line += " AUTOINCREMENT";
+                if (col.notNull) line += " NOT NULL";
+                if (col.unique) line += " UNIQUE";
+                if (col.defaultValue) line += ` DEFAULT ${col.defaultValue}`;
+                if (col.foreignKey && col.relatedTable) {
+                    line += ` REFERENCES ${col.relatedTable}`;
+                }
+
+                return line;
+            }).join(",\n");
+
+            return `CREATE TABLE ${table.name} (\n${columnsSql}\n);`;
+        }).join("\n\n");
+
+        setSqlCode(code);
+        setShowSqlSection(true);
+    };
+
+
+    const SQL = () => {
+
+        return (
+            <>
+                <button onClick={handelSqlCode}>Export to SQL code</button>
+                {showSqlSection && (
+                    <div className="sqlSection">
+                        <pre>{sqlCode}</pre>
+                    </div>
+                )}
+            </>
+        );
+    };
+
+
     return (
         <>
             <Header />
@@ -216,7 +294,9 @@ export function Home() {
                     <button onClick={createTable}>Create table</button>
                 </div>
             </section>
-          
+            <Display />
+            <SQL />
+
         </>
     )
 }
