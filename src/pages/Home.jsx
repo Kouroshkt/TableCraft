@@ -171,6 +171,61 @@ export function Home() {
             </>
         );
     };
+    const [showJavaSection, setShowJavaSection] = useState(false);
+    const [javaCode, setJavaCode] = useState("");
+
+    const handelJavaCode = () => {
+        if (!tables || tables.length === 0) {
+            alert("You have no tables.");
+            return;
+        }
+
+        const code = tables.map(table => {
+            const fields = table.columns.map(col => {
+                const annotations = [];
+
+                if (col.primaryKey) annotations.push("@Id");
+                if (col.autoIncrement) annotations.push("@GeneratedValue(strategy = GenerationType.IDENTITY)");
+                if (col.notNull) annotations.push("@Column(nullable = false)");
+                if (col.unique) annotations.push("@Column(unique = true)");
+                if (col.foreignKey && col.relatedTable) {
+                    annotations.push(`@ManyToOne\n    @JoinColumn(name = "${col.name}", referencedColumnName = "id")`);
+                }
+
+                const fieldType = col.type === "int" || col.type === "INTEGER" ? "int" : "String";
+                const field = `${annotations.join("\n    ")}\n    private ${fieldType} ${col.name};`;
+
+                return field;
+            }).join("\n\n    ");
+
+            return `import jakarta.persistence.*;\nimport lombok.AllArgsConstructor;\nimport lombok.Data;\nimport lombok.NoArgsConstructor;\n
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ${table.name} {
+
+    ${fields}
+
+}`;
+        }).join("\n\n");
+
+        setJavaCode(code);
+        setShowJavaSection(true);
+    };
+
+    const ToJava = () => {
+        return (
+            <>
+                <button onClick={handelJavaCode}>Export to Java</button>
+                {showJavaSection && (
+                    <div className="JavaSection">
+                        <pre>{javaCode}</pre>
+                    </div>
+                )}
+            </>
+        )
+    };
 
 
     return (
@@ -295,7 +350,10 @@ export function Home() {
                 </div>
             </section>
             <Display />
+            <div className="codeSection">
             <SQL />
+            <ToJava />
+            </div>
 
         </>
     )
