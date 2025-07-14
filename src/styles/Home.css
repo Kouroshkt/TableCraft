@@ -138,16 +138,20 @@ select[multiple] option:checked {
 }
 
 .sqlSection {
-  font-size: 20px;
+  color: white;
+  background-color: #333;
+  font-size: 16px;
   padding: 20px;
 }
 
-.JavaSection{
-  font-size: 20px;
+.JavaSection {
+  color: white;
+  background-color: #333;
+  font-size: 16px;
   padding: 20px;
 }
 
-.codeSection{
+.codeSection {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
