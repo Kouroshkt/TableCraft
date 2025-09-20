@@ -155,7 +155,7 @@ export function Home() {
 
         setSqlCode(code);
         setShowSqlSection(true);
-    };
+    }; 
 
 
     const SQL = () => {
