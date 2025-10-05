@@ -1,24 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/Home.css";
 
 export function Home() {
+    // ================== HOOKS ==================
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 760);
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const [database, setDatabase] = useState("");
     const [showDatabase, setShowDatabase] = useState(true);
     const [showChangedatabase, setShowChangedatabase] = useState(false);
-
-    const saveDatabase = () => {
-        if (!database) {
-            alert("Du måste ange ett databasnamn.");
-            return;
-        }
-        setShowDatabase(false);
-        setShowChangedatabase(true);
-    };
-
-    const changeDatabase = () => {
-        setShowDatabase(true);
-        setShowChangedatabase(false);
-    };
 
     const sqlTypes = [
         "CHAR", "VARCHAR(50)", "VARCHAR(100)", "VARCHAR(250)", "TEXT",
@@ -47,6 +43,47 @@ export function Home() {
         reference: { table: "", column: "" }
     });
 
+    const [showSqlSection, setShowSqlSection] = useState(false);
+    const [sqlCode, setSqlCode] = useState("");
+
+    const [showJavaSection, setShowJavaSection] = useState(false);
+    const [javaCode, setJavaCode] = useState("");
+
+    // ================== MOBIL BLOCKERING ==================
+    if (isMobile) {
+        return (
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                height: "100vh",
+                textAlign: "center",
+                backgroundColor: "#f8d7da",
+                color: "#721c24",
+                padding: "20px"
+            }}>
+                <h2>📵 Tabelkraft fungerar inte på mobil vy</h2>
+                <p>Vänligen använd en dator eller surfplatta i landskapsläge.</p>
+            </div>
+        );
+    }
+
+    // ================== FUNKTIONER ==================
+    const saveDatabase = () => {
+        if (!database) {
+            alert("Du måste ange ett databasnamn.");
+            return;
+        }
+        setShowDatabase(false);
+        setShowChangedatabase(true);
+    };
+
+    const changeDatabase = () => {
+        setShowDatabase(true);
+        setShowChangedatabase(false);
+    };
+
     const addColumn = () => {
         if (!column.name || (!column.type && !column.foreignKey)) {
             alert("Fyll i namn och typ för kolumnen");
@@ -72,70 +109,23 @@ export function Home() {
         });
     };
 
-   const createTable = () => {
-    if (!table.name || table.columns.length === 0 || !database) {
-        alert("Ange tabellnamn, databasnamn och minst en kolumn");
-        return;
-    }
+    const createTable = () => {
+        if (!table.name || table.columns.length === 0 || !database) {
+            alert("Ange tabellnamn, databasnamn och minst en kolumn");
+            return;
+        }
 
-    // Kontrollera att minst en kolumn är primary key
-    const hasPrimaryKey = table.columns.some(col => col.primaryKey);
-    if (!hasPrimaryKey) {
-        alert("Minst en kolumn måste vara Primary Key!");
-        return;
-    }
+        const hasPrimaryKey = table.columns.some(col => col.primaryKey);
+        if (!hasPrimaryKey) {
+            alert("Minst en kolumn måste vara Primary Key!");
+            return;
+        }
 
-    setTables(prev => [...prev, table]);
-    setTable({ name: "", columns: [] });
-};
+        setTables(prev => [...prev, table]);
+        setTable({ name: "", columns: [] });
+    };
 
-
-    const Display = () => (
-    <div className="display">
-        {tables.map((table, index) => (
-            <table key={index} className="table-display">
-                <thead>
-                    <tr>
-                        <th colSpan="10">{table.name}</th>
-                    </tr>
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Default</th>
-                        <th>Primary Key</th>
-                        <th>Foreign Key</th>
-                        <th>Relation</th>
-                        <th>Related Table</th>
-                        <th>Auto Increment</th>
-                        <th>Unique</th>
-                        <th>Not Null</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {table.columns.map((col) => (
-                        <tr key={col.id}>
-                            <td>{col.name}</td>
-                            <td>{col.type}</td>
-                            <td>{col.defaultValue || "-"}</td>
-                            <td>{col.primaryKey ? "Yes" : "No"}</td>
-                            <td>{col.foreignKey ? "Yes" : "No"}</td>
-                            <td>{col.relationType || "-"}</td>
-                            <td>{col.relatedTable || "-"}</td>
-                            <td>{col.autoIncrement ? "Yes" : "No"}</td>
-                            <td>{col.unique ? "Yes" : "No"}</td>
-                            <td>{col.notNull ? "Yes" : "No"}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        ))}
-    </div>
-);
-
-    // ================= SQL EXPORT =================
-    const [showSqlSection, setShowSqlSection] = useState(false);
-    const [sqlCode, setSqlCode] = useState("");
-
+    // ================== SQL EXPORT ==================
     const handelSqlCode = () => {
         if (!tables || tables.length === 0 || !database) {
             alert("You must provide a database name and at least one table.");
@@ -205,10 +195,7 @@ USE ${database};\n\n`;
         );
     };
 
-    // ================= JAVA EXPORT =================
-    const [showJavaSection, setShowJavaSection] = useState(false);
-    const [javaCode, setJavaCode] = useState("");
-
+    // ================== JAVA EXPORT ==================
     const sqlToJavaType = (sqlType) => {
         if (!sqlType) return "String";
         const type = sqlType.toUpperCase();
@@ -234,13 +221,11 @@ USE ${database};\n\n`;
                 const annotations = [];
                 let fieldType;
 
-                // Primary Key
                 if (col.primaryKey) {
                     annotations.push("@Id");
                     if (col.autoIncrement) annotations.push("@GeneratedValue(strategy = GenerationType.IDENTITY)");
                 }
 
-                // Foreign Key relations
                 if (col.foreignKey && col.relatedTable) {
                     switch (col.relationType) {
                         case "OneToOne":
@@ -260,8 +245,8 @@ USE ${database};\n\n`;
                         case "ManyToMany":
                             annotations.push("@ManyToMany");
                             annotations.push("@JoinTable(name = \"" + table.name + "_" + col.relatedTable + "\", " +
-                                             "joinColumns = @JoinColumn(name = \"" + table.name.toLowerCase() + "_id\"), " +
-                                             "inverseJoinColumns = @JoinColumn(name = \"" + col.relatedTable.toLowerCase() + "_id\"))");
+                                "joinColumns = @JoinColumn(name = \"" + table.name.toLowerCase() + "_id\"), " +
+                                "inverseJoinColumns = @JoinColumn(name = \"" + col.relatedTable.toLowerCase() + "_id\"))");
                             fieldType = `List<${col.relatedTable}>`;
                             break;
                         default:
@@ -319,13 +304,62 @@ public class ${table.name} {
         );
     };
 
-    // ================= JSX =================
+    const Display = () => (
+        <div className="display">
+            {tables.map((table, index) => (
+                <table key={index} className="table-display">
+                    <thead>
+                        <tr>
+                            <th colSpan="10">{table.name}</th>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Primary Key</th>
+                            <th>Foreign Key</th>
+                            <th>Relation</th>
+                            <th>Related Table</th>
+                            <th>Auto Increment</th>
+                            <th>Unique</th>
+                            <th>Not Null</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {table.columns.map((col) => (
+                            <tr key={col.id}>
+                                <td>{col.name}</td>
+                                <td>{col.type}</td>
+                                <td>{col.defaultValue || "-"}</td>
+                                <td>{col.primaryKey ? "Yes" : "No"}</td>
+                                <td>{col.foreignKey ? "Yes" : "No"}</td>
+                                <td>{col.relationType || "-"}</td>
+                                <td>{col.relatedTable || "-"}</td>
+                                <td>{col.autoIncrement ? "Yes" : "No"}</td>
+                                <td>{col.unique ? "Yes" : "No"}</td>
+                                <td>{col.notNull ? "Yes" : "No"}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ))}
+        </div>
+    );
+
+    // ================== JSX ==================
     return (
         <>
             <div>
                 <h2 style={{ textAlign: "center" }}>
-                    Design your database and get real-time SQL and Java code.
+                    Designa din databas och få SQL- och Java-kod i realtid.
                 </h2>
+                <p style={{ textAlign: "center", fontStyle: "italic", color: "#555" }}>
+                    Ange först ett databasnamn och skapa databasen.
+                    Sedan kan du skapa tabeller, lägga till <br/>kolumner med egenskaper
+                    (typ, primary key, foreign key, relationer osv.),<br/>
+                    och exportera både SQL och Java-kod.
+                    Klicka på "Copy" för att kopiera koden till urklipp.
+                </p>
                 {showDatabase &&
                     <div className="createDatabase">
                         <input type="text" value={database} onChange={(e) => setDatabase(e.target.value)} placeholder="Database name" />
@@ -435,18 +469,18 @@ public class ${table.name} {
                                 </div>
                             </div>
                         )}
-                        <button onClick={addColumn}>ADD column</button>
+
+                        <div className="buttons">
+                            <button onClick={addColumn}>Add column</button>
+                            <button onClick={createTable}>Create table</button>
+                        </div>
                     </div>
-                    <button onClick={createTable}>Create table</button>
                 </div>
             </section>
 
             <Display />
-
-            <div className="codeSection">
-                <SQL />
-                <ToJava />
-            </div>
+            <SQL />
+            <ToJava />
         </>
     );
 }
