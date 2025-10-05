@@ -2,6 +2,7 @@
   border-radius: 10px;
   background-color: antiquewhite;
   margin-top: 10px;
+  margin-bottom: 10px;
   padding: 10px;
   border: 1px solid rgba(0, 0, 0, 0.242);
 }
@@ -160,12 +161,14 @@ select[multiple] option:checked {
 
 /* ====== Responsiv design för tablet och mobil ====== */
 @media (max-width: 1024px) {
+
   /* Tablet */
   .createDatabase {
     flex-direction: column;
     gap: 15px;
   }
 
+  
   .columns {
     flex-direction: column;
     align-items: flex-start;
@@ -195,6 +198,7 @@ select[multiple] option:checked {
 }
 
 @media (max-width: 600px) {
+
   /* Mobil */
   .tableSection {
     padding: 10px;
@@ -224,7 +228,9 @@ select[multiple] option:checked {
     max-width: 300px;
   }
 }
+
 @media (max-width: 1024px) {
+
   /* Tablet */
   .tableContainer {
     margin: 0 auto;
@@ -237,6 +243,7 @@ select[multiple] option:checked {
 }
 
 @media (max-width: 600px) {
+
   /* Mobil */
   .tableContainer {
     padding: 5px;
@@ -244,6 +251,7 @@ select[multiple] option:checked {
 
   .tableContainer table {
     font-size: 12px;
-    min-width: 500px; /* Så tabellen inte trycks ihop för mycket */
+    min-width: 500px;
+    /* Så tabellen inte trycks ihop för mycket */
   }
 }
